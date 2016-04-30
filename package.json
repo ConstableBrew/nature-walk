@@ -1,0 +1,27 @@
+{
+  "name": "nature-walk",
+  "version": "1.0.0",
+  "description": "Escape the dark beast!",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ConstableBrew/nature-walk.git"
+  },
+  "keywords": [
+    "game",
+    "nature",
+    "druid",
+    "platformer",
+    "endless",
+    "run"
+  ],
+  "author": "Michael Brewer <constablebrew@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ConstableBrew/nature-walk/issues"
+  },
+  "homepage": "https://github.com/ConstableBrew/nature-walk#readme"
+}
