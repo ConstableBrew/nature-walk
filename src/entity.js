@@ -16,6 +16,7 @@ export default class Entity {
 		this.dx = config.dx|0;
 		this.dy = config.dy|0;
 		this.sprite = config.sprite;
+		this.animationFrameId = 0;
 	}
 
 	setAnimation(frameId, sprite){
@@ -26,7 +27,7 @@ export default class Entity {
 	getKeyFrame(frameId){
 		if (!this.sprite && this.sprite.getKeyFrame) return {};
 
-		return this.sprite.getKeyFrame(frameId - this.animationFrameid);
+		return this.sprite.getKeyFrame(frameId - this.animationFrameId);
 	}
 
 

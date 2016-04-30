@@ -38,24 +38,13 @@ class Game {
 		this.onScreenCtx.imageSmoothingEnabled  = false;
 
 		this.assets = assets;
-		this.player = new Entity('player');
-		this.player.setAnimation(this.frameId, this.assets['DRUID_RUN'])
+		this.player = new Entity('player', {x: WIDTH/2, y:HEIGHT/2});
+		this.player.setAnimation(this.frameId|0, this.assets['DRUID_RUN'])
 	}
 
 	start() {
 		// Begins the main game loop
 		requestAnimationFrame(this.frame.bind(this), this.onScreen);
-	}
-
-	waitForContent(){
-		// Wait for content to be retreived by the browser
-		return new Promise(function (resolve, reject){
-			spritesheet.src = 'joust-spritesheet.png'; // Should wait for this too... TODO
-			var req = new XMLHttpRequest();
-			req.addEventListener('load', resolve);
-			req.open('GET', '/resume.html');
-			req.send();
-		});
 	}
 
 	// ========================================================================
@@ -70,7 +59,9 @@ class Game {
 	frame() {
 		this.t = window.performance.now();
 		this.dt += Math.min(1, (this.t - this.tprev) / 1000);
+		console.clear();
 		while(this.dt > STEP) {
+			console.log(this.dt, this.frameId);
 			this.dt -= STEP;
 			//this.update(STEP);
 			this.frameId = (this.frameId + 1)|0;
@@ -115,7 +106,7 @@ class Game {
 			ctx.fillText('frameId: ' + this.frameId, 0, linePos += lineHeight);
 		}
 
-
+		this.onScreenCtx.clearRect(0, 0, this.onScreen.width, this.onScreen.height);;
 		this.onScreenCtx.drawImage(
 			cvs,
 			x, y, w, h,
