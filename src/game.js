@@ -72,8 +72,9 @@ class Game {
 		this.assets = assets;
 		this.player = new Player({x: WIDTH/2, y:HEIGHT/2});
 		this.player.setAnimation(this.frameId|0, this.assets['DRUID_RUN'])
-		
-		this.layers.push(new Terrain(0.1, [this.assets['BG_MOUNTAIN']]));
+
+		this.layers.push(new Terrain(0.5, [this.assets['BG_MOUNTAIN']]));
+		this.layers.push(new Terrain(0.75, [this.assets['BG_HILL']]));
 		this.layers.push(this.player);
 	}
 
