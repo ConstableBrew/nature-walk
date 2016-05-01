@@ -81,9 +81,7 @@ export default class Ground {
 		ctx.stroke();
 	}
 
-	update(dt, dx, dy){
-		dx = dt * dx;
-		dy = dt * dy;
+	update(dx, dy){
 		this.segments.forEach((segment) => {
 			segment.x += dx;
 			segment.y += dy;

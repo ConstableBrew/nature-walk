@@ -47,13 +47,12 @@ export default class Terrain {
 		this.entities.forEach((entity) => entity.render(frameId, ctx));
 	}
 
-	update(dt, sceneDx, sceneDy){
+	update(dx, dy){
 
 		// Update positions
-		dt = dt * this.zFactor;
-		sceneDx = dt * sceneDx;
-		sceneDy = dt * sceneDy;
-		this.entities.forEach((entity) => entity.update(dt, sceneDx, sceneDy))
+		dx = this.zFactor * dx;
+		dy = this.zFactor * dy;
+		this.entities.forEach((entity) => entity.update(dx, dy))
 
 		this.garbageCollection();
 	}

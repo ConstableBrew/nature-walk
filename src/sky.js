@@ -20,7 +20,7 @@ export default class Sky extends Entity {
 		ctx.drawImage(kf.image, kf.sx, kf.sy, kf.sw, kf.sh, this.x, this.y, this.w, this.h);
 	}
 	
-	update(dt, sceneDx, sceneDy){
+	update(){
 		// nop
 	}
 }

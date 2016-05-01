@@ -40,11 +40,11 @@ export default class Entity {
 		ctx.drawImage(kf.image, kf.sx, kf.sy, kf.sw, kf.sh, this.x, this.y, kf.sw, kf.sh);
 	}
 
-	update(dt, dx, dy){
-		this.dx += dt * dx;
-		this.dy += dt * dy;
-		this.x  += dt * this.dx;
-		this.y  += dt * this.dy;
+	update(dx, dy){
+		this.dx = dx;
+		this.dy = dy;
+		this.x  += this.dx;
+		this.y  += this.dy;
 	}
 
 }

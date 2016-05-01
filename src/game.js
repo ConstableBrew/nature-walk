@@ -14,6 +14,7 @@ const HEIGHT = 768;  // Offscreen rendering size
 const RATIO  = HEIGHT / WIDTH;
 const BASE_LINE = HEIGHT * 0.667;
 const BASE_MARGIN = WIDTH * 0.2;
+const GRAVITY = 987;
 
 class Game {
 	gameReady = false;
@@ -99,9 +100,26 @@ class Game {
 	// ========================================================================
 
 	update(dt) {
-		let dx = -Math.log(this.frameId) * 50; // The rate that things are scrolling left
-		let dy = 0;
-		this.layers.forEach((layer) => layer.update(dt, dx, dy));
+
+		// Update the player first, then move the player back to the static position. Use the delta of the player to adjust the other layers
+		let x = this.player.x;
+		let y = this.player.y;
+		let ddx = Math.log(this.frameId) * 50; // The rate that player is moving forward
+		let ddy = GRAVITY;
+
+		this.player.update(dt, ddx, ddy);
+
+		let dx = x - this.player.x;
+		let dy = y - this.player.y;
+
+		this.player.x = x;
+		this.player.y = y;
+
+
+		this.layers.forEach((layer) => {
+			if (layer.type !== 'player')
+				layer.update(dx, dy)
+		});
 	}
 
 
