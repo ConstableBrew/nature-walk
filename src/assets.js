@@ -14,6 +14,9 @@ bg_hill.src = '/assets/bg-hill.png';
 var bg_cloud = new Image();
 bg_cloud.src = '/assets/bg-clouds-transparent.png';
 
+var bg_sky = new Image();
+bg_sky.src = '/assets/bg-sky.png';
+
 
 
 export default {
@@ -27,5 +30,6 @@ export default {
     BG_CLOUD_03: new Sprite(bg_cloud, 216, 48, 286, 64, 1),
     BG_CLOUD_04: new Sprite(bg_cloud, 0, 112, 502, 72, 1),
     BG_CLOUD_05: new Sprite(bg_cloud, 0, 184, 502, 72, 1),
+    BG_SKY: new Sprite(bg_sky, 0, 0, 1, 1, 1)
 
 };

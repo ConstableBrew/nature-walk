@@ -2,6 +2,7 @@ import * as utils from './utils';
 import Player from './player';
 import Ground from './ground';
 import Terrain from './terrain';
+import Sky from './sky';
 
 utils.init();
 
@@ -76,6 +77,7 @@ class Game {
 		this.player = new Player({x: BASE_MARGIN, y:BASE_LINE});
 		this.player.setAnimation(this.frameId|0, this.assets['DRUID_RUN'])
 
+		this.layers.push(new Sky(this.assets['BG_SKY']));
 		this.layers.push(new Terrain(0.5, [this.assets['BG_MOUNTAIN']], 3));
 		this.layers.push(new Terrain(0.75, [this.assets['BG_HILL']], 5));
 		this.layers.push(this.player);
