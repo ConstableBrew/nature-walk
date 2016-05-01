@@ -1,0 +1,22 @@
+* {
+	box-sizing: border-box;
+}
+
+
+body {
+	background: #111;
+	color: #aaa;
+	font-size: 1em;
+}
+
+#canvas {
+	display: block;
+	height: 100%;
+	left: 0;
+	max-height: 100%;
+	max-width: 100%;
+	overflow: hidden;
+	position: absolute;
+	top: 0px;
+	width: 100%;
+}
