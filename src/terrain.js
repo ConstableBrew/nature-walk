@@ -21,7 +21,7 @@ export default class Terrain {
 
 	generate(){
 		while(this.entities.length < this.density && this.sprites.length){
-			let sprite = this.sprites[Math.random() * this.sprites.length];
+			let sprite = this.sprites[(Math.random() * this.sprites.length)|0];
 			let x = WIDTH + WIDTH * Math.random();
 			let y = HEIGHT - sprite.sh;
 
