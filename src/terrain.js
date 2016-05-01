@@ -8,24 +8,25 @@ const HEIGHT = 768;  // Offscreen rendering size
 export default class Terrain {
 
 	density = 5;
-	zFactor = 0.1; // Simulates distance, reducing the aparent movement of objects that are further away (0 for no movement)
+	yOffset = 0;
+	zFactor = 1; // Simulates distance, reducing the aparent movement of objects that are further away (0 for no movement)
 	entities = [];
 	sprites = [];
 
-	constructor(zFactor, sprites, density){
+	constructor(zFactor, sprites, density, yOffset){
 		this.zFactor = zFactor;
 		this.sprites = sprites || [];
 		this.density = density|0 || this.density;
+		this.yOffset = yOffset|0;
 		this.generate();
+		this.entities.forEach((entity) => entity.x -= 1.5*WIDTH);
 	}
 
 	generate(){
 		while(this.entities.length < this.density && this.sprites.length){
 			let sprite = this.sprites[(Math.random() * this.sprites.length)|0];
 			let x = WIDTH + WIDTH * Math.random();
-			let y = HEIGHT - sprite.sh;
-
-			console.log('Generating terrain', x, y, this.zFactor);
+			let y = HEIGHT - this.yOffset - sprite.sh;
 
 			let entity = new Entity('terrain', {x: x, y: y, sprite: sprite})
 			this.entities.push(entity);
@@ -37,6 +38,7 @@ export default class Terrain {
 			let entity = this.entities[i];
 			if (entity.x + entity.w < 0){
 				this.entities.splice(i--,1);
+				this.generate();
 			}
 		}
 	}
@@ -54,6 +56,5 @@ export default class Terrain {
 		this.entities.forEach((entity) => entity.update(dt, sceneDx, sceneDy))
 
 		this.garbageCollection();
-		this.generate();
 	}
 }

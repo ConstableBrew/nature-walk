@@ -45,8 +45,6 @@ export default class Entity {
 		this.dy += dt * dy;
 		this.x  += dt * this.dx;
 		this.y  += dt * this.dy;
-
-		console.log(this.type, this.x, this.y);
 	}
 
 }
