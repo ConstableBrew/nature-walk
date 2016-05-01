@@ -3,7 +3,7 @@ import {normal_random} from './utils';
 // TODO: Move these to some config file
 const WIDTH  = 1024; // Offscreen rendering size
 const HEIGHT = 768;  // Offscreen rendering size
-const BASE_LINE = HEIGHT * 0.75;
+const BASE_LINE = HEIGHT * 0.667;
 
 export default class Ground {
 

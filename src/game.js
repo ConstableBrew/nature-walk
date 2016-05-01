@@ -12,7 +12,7 @@ const STEP = 1/FPS;
 const WIDTH  = 1024; // Offscreen rendering size
 const HEIGHT = 768;  // Offscreen rendering size
 const RATIO  = HEIGHT / WIDTH;
-const BASE_LINE = HEIGHT * 0.75;
+const BASE_LINE = HEIGHT * 0.667;
 const BASE_MARGIN = WIDTH * 0.2;
 
 class Game {
