@@ -11,6 +11,8 @@ const STEP = 1/FPS;
 const WIDTH  = 1024; // Offscreen rendering size
 const HEIGHT = 768;  // Offscreen rendering size
 const RATIO  = HEIGHT / WIDTH;
+const BASE_LINE = HEIGHT * 0.75;
+const BASE_MARGIN = WIDTH * 0.2;
 
 class Game {
 	gameReady = false;
@@ -71,11 +73,11 @@ class Game {
 		this.onScreenCtx.imageSmoothingEnabled  = false;
 
 		this.assets = assets;
-		this.player = new Player({x: WIDTH/2, y:HEIGHT/2});
+		this.player = new Player({x: BASE_MARGIN, y:BASE_LINE});
 		this.player.setAnimation(this.frameId|0, this.assets['DRUID_RUN'])
 
-		this.layers.push(new Terrain(0.75, [this.assets['BG_MOUNTAIN']], 3));
-		this.layers.push(new Terrain(0.9, [this.assets['BG_HILL']], 5));
+		this.layers.push(new Terrain(0.5, [this.assets['BG_MOUNTAIN']], 3));
+		this.layers.push(new Terrain(0.75, [this.assets['BG_HILL']], 5));
 		this.layers.push(this.player);
 		this.layers.push(new Ground());
 	}
@@ -95,7 +97,7 @@ class Game {
 	// ========================================================================
 
 	update(dt) {
-		let dx = -Math.log(this.frameId) * 7; // The rate that things are scrolling left
+		let dx = -Math.log(this.frameId) * 50; // The rate that things are scrolling left
 		let dy = 0;
 		this.layers.forEach((layer) => layer.update(dt, dx, dy));
 	}

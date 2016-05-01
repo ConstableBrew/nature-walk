@@ -3,8 +3,7 @@ import {normal_random} from './utils';
 // TODO: Move these to some config file
 const WIDTH  = 1024; // Offscreen rendering size
 const HEIGHT = 768;  // Offscreen rendering size
-
-const BASE_LINE = HEIGHT - 100;
+const BASE_LINE = HEIGHT * 0.75;
 
 export default class Ground {
 
@@ -16,19 +15,20 @@ export default class Ground {
 			x: 0,
 			y: BASE_LINE,
 			cp1x: 0,
-			cp1y: 0,
-			cp2x: WIDTH,
+			cp1y: BASE_LINE,
+			cp2x: WIDTH * 0.6667,
 			cp2y: BASE_LINE,
 			endx: WIDTH,
 			endy: BASE_LINE
 		};
 		this.segments.push(segment);
+		console.log(segment);
 		this.generate();
 	}
 
 	generate(){
 
-		let last = this.segments[segments.length-1];
+		let last = this.segments[this.segments.length-1];
 		while (this.segments.length < 3){
 			let x = last.endx;
 			let y = last.endy;
@@ -37,7 +37,7 @@ export default class Ground {
 			let endx = x + WIDTH;
 			let endy = y + HEIGHT * normal_random();
 
-			let variance = (WIDTH / 3) * normal_random();
+			let variance = (WIDTH / 5) + (WIDTH / 3) * normal_random();
 			let cp2x = endx - variance;
 			let cp2y = endy - variance * normal_random();
 
@@ -53,6 +53,7 @@ export default class Ground {
 			};
 			this.segments.push(segment);
 			last = segment;
+			console.log(segment);
 		}
 	}
 
