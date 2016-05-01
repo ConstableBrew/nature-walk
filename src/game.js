@@ -1,5 +1,6 @@
 import * as utils from './utils';
 import Player from './player';
+import Ground from './ground';
 import Terrain from './terrain';
 
 utils.init();
@@ -76,6 +77,7 @@ class Game {
 		this.layers.push(new Terrain(0.75, [this.assets['BG_MOUNTAIN']], 3));
 		this.layers.push(new Terrain(0.9, [this.assets['BG_HILL']], 5));
 		this.layers.push(this.player);
+		this.layers.push(new Ground());
 	}
 
 	start() {
@@ -95,8 +97,6 @@ class Game {
 	update(dt) {
 		let dx = -Math.log(this.frameId) * 7; // The rate that things are scrolling left
 		let dy = 0;
-
-		console.log(dx, dy);
 		this.layers.forEach((layer) => layer.update(dt, dx, dy));
 	}
 
