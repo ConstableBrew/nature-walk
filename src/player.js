@@ -1,5 +1,7 @@
 import Entity from './entity';
 
+const GRAVITY = -10;
+
 export default class Player extends Entity {
 	constructor(config){
 		let type = 'player';

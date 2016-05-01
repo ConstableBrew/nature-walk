@@ -12,7 +12,7 @@ bg_hill.src = '/assets/bg-hill.png';
 
 //===== Clouds=====
 var bg_cloud = new Image();
-bg_cloud.src = 'assets/bg-clouds-transparent';
+bg_cloud.src = '/assets/bg-clouds-transparent.png';
 
 
 
