@@ -1,8 +1,10 @@
 import * as utils from './utils';
-import Entity from './entity';
+import Player from './player';
+import Terrain from './terrain';
 
 utils.init();
 
+// TODO: Move these to some config file
 const FPS  = 24;
 const STEP = 1/FPS;
 const WIDTH  = 1024; // Offscreen rendering size
@@ -19,9 +21,39 @@ class Game {
 	onScreenCtx  = null;
 	offScreenCtx = null;
 
+	layers = [];
 	player = {};
-	entities = [];
 	assets = {};
+
+
+	// ========================================================================
+	// Main Game Loop
+	// ========================================================================
+	
+	frameId = 0|0;
+	tprev = window.performance.now();
+	t = this.tprev;
+	dt = 0;
+
+	frame() {
+		this.t = window.performance.now();
+		this.dt += Math.min(1, (this.t - this.tprev) / 1000);
+		while(this.dt > STEP) {
+			this.frameId = (this.frameId + 1)|0;
+			this.dt -= STEP;
+			this.update(STEP);
+		}
+		this.tprev = this.t;
+		this.render();
+		
+		if (this.paused) return;
+		requestAnimationFrame(this.frame.bind(this), this.onScreen);
+	}
+
+
+	// ========================================================================
+	// Setup
+	// ========================================================================
 
 	constructor(canvas, assets){
 		this.onScreen  = canvas;
@@ -38,39 +70,32 @@ class Game {
 		this.onScreenCtx.imageSmoothingEnabled  = false;
 
 		this.assets = assets;
-		this.player = new Entity('player', {x: WIDTH/2, y:HEIGHT/2});
+		this.player = new Player({x: WIDTH/2, y:HEIGHT/2});
 		this.player.setAnimation(this.frameId|0, this.assets['DRUID_RUN'])
+
+		debugger;
+		this.layers.push(new Terrain(0.1, [this.assets['BG_MOUNTAIN']]));
+		this.layers.push(this.player);
 	}
 
 	start() {
 		// Begins the main game loop
+		this.frameId = 0;
 		requestAnimationFrame(this.frame.bind(this), this.onScreen);
 	}
 
-	// ========================================================================
-	// Main Game Loop
-	// ========================================================================
-	
-	frameId = 0|0;
-	tprev = window.performance.now();
-	t = this.tprev;
-	dt = 0;
 
-	frame() {
-		this.t = window.performance.now();
-		this.dt += Math.min(1, (this.t - this.tprev) / 1000);
-		console.clear();
-		while(this.dt > STEP) {
-			console.log(this.dt, this.frameId);
-			this.dt -= STEP;
-			//this.update(STEP);
-			this.frameId = (this.frameId + 1)|0;
-		}
-		this.tprev = this.t;
-		this.render();
-		
-		if (this.paused) return;
-		requestAnimationFrame(this.frame.bind(this), this.onScreen);
+
+
+
+	// ========================================================================
+	// Update
+	// ========================================================================
+
+	update(dt) {
+		let dx = -Math.log(this.frameId) * 7; // The rate that things are scrolling left
+		let dy = 0;
+		this.layers.forEach((layer) => layer.update(dt, dx, dy));
 	}
 
 
@@ -93,7 +118,8 @@ class Game {
 
 		ctx.clearRect(0, 0, cvs.width, cvs.height);
 
-		this.renderPlayer();
+		this.renderLayers();
+
 
 		if (this.debug) {
 			ctx.fillStyle = 'rgba(0,0,0,0.75)';
@@ -114,16 +140,10 @@ class Game {
 		);
 	}
 
-	renderPlayer(){
-		this.renderCreature(this.player);
+	renderLayers(){
+		this.layers.forEach((layer) => layer.render(this.frameId, this.offScreenCtx));
 	}
 
-	renderCreature(entity) {
-		let kf = entity.getKeyFrame(this.frameId);
-		
-		this.offScreenCtx.drawImage(kf.image, kf.sx, kf.sy, kf.sw, kf.sh, entity.x, entity.y, kf.sw, kf.sh);
-		
-	}
 
 }
 
