@@ -24,9 +24,8 @@ export default class Terrain extends SetPiece{
 
 		if (!xoffset)
 			xoffset = this.scenery.reduce((x, s) => Math.max(x, s.x + s.w), 0);
-		debugger;
 
-		while(xoffset < config.WIDTH + SetPiece.dx){
+		while(xoffset < config.WIDTH + SetPiece.stateDx){
 			let sprite = this.sprites[(Math.random() * this.sprites.length)|0];
 			let x = xoffset + sprite.w + sprite.w / 2 * normal_random();
 			let y = this.y;

@@ -102,15 +102,14 @@ class Game {
 	// ========================================================================
 
 	update(dt) {
-
 		// Update the player first, then move the player back to the static position. Use the delta of the player to adjust the other layers
 		let x = this.player.x;
 		let y = this.player.y;
 
 		this.player.update(dt);
 
-		SetPiece.dx = x - this.player.x;
-		SetPiece.dy = y - this.player.y;
+		SetPiece.stageDx = x - this.player.x;
+		SetPiece.stageDy = y - this.player.y;
 
 		this.player.x = x;
 		this.player.y = y;
