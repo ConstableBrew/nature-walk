@@ -1,59 +1,64 @@
-import Entity from './entity';
+import {normal_random} from './utils';
+import * as config from './config';
+import Scenery from './scenery';
+import SetPiece from './setpiece';
 
 
 // TODO: Move these to some config file
-const WIDTH  = 1024; // Offscreen rendering size
-const HEIGHT = 768;  // Offscreen rendering size
 
-export default class Terrain {
+export default class Terrain extends SetPiece{
 
-	density = 5;
-	yOffset = 0;
-	zFactor = 1; // Simulates distance, reducing the aparent movement of objects that are further away (0 for no movement)
-	entities = [];
-	sprites = [];
 
-	constructor(zFactor, sprites, density, yOffset){
-		this.zFactor = zFactor;
+	constructor(x, y, z, sprites){
+		super(x, y, z)
+		this.scenery = [];
 		this.sprites = sprites || [];
-		this.density = density|0 || this.density;
-		this.yOffset = yOffset|0;
+		this.type = 'terrain';
+
 		this.generate();
-		this.entities.forEach((entity) => entity.x -= 1.5*WIDTH);
 	}
 
-	generate(){
-		while(this.entities.length < this.density && this.sprites.length){
-			let sprite = this.sprites[(Math.random() * this.sprites.length)|0];
-			let x = WIDTH + WIDTH * Math.random();
-			let y = HEIGHT - this.yOffset - sprite.sh;
+	generate(xoffset){
+		// Add more scenery until we are beyond the edge of the screen + distance scene dx
+		if (!this.sprites.length) return;
 
-			let entity = new Entity('terrain', {x: x, y: y, sprite: sprite})
-			this.entities.push(entity);
+		if (!xoffset)
+			xoffset = this.scenery.reduce((x, s) => Math.max(x, s.x + s.w), 0);
+		debugger;
+
+		while(xoffset < config.WIDTH + SetPiece.dx){
+			let sprite = this.sprites[(Math.random() * this.sprites.length)|0];
+			let x = xoffset + sprite.w + sprite.w / 2 * normal_random();
+			let y = this.y;
+			let z = this.z;
+
+			let scenery = new Scenery(x, y, z, width, height, sprite, frameId)
+			this.scenery.push(scenery);
+
+			xoffset = x + sprite.w;
 		}
 	}
 
 	garbageCollection(){
-		for(let i=0; i<this.entities.length; ++i){
-			let entity = this.entities[i];
-			if (entity.x + entity.w < 0){
-				this.entities.splice(i--,1);
-				this.generate();
+		let xoffset = 0;
+		for(let i=0; i<this.scenery.length; ++i){
+			let scenery = this.scenery[i];
+			let x = scenery.x + scenery.w;
+			if (x < 0){
+				this.scenery.splice(i--,1);
 			}
+			xoffset = Math.max(xoffset, x);
 		}
+		this.generate(xoffset);
 	}
 
 	render(frameId, ctx){
-		this.entities.forEach((entity) => entity.render(frameId, ctx));
+		this.scenery.forEach((scenery) => scenery.render(frameId, ctx));
 	}
 
-	update(dx, dy){
-
-		// Update positions
-		dx = this.zFactor * dx;
-		dy = this.zFactor * dy;
-		this.entities.forEach((entity) => entity.update(dx, dy))
-
+	update(dt){
+		super.update(dt);
+		this.scenery.forEach((scenery) => scenery.update(dt))
 		this.garbageCollection();
 	}
 }

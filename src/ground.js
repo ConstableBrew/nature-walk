@@ -1,9 +1,5 @@
 import {normal_random} from './utils';
-
-// TODO: Move these to some config file
-const WIDTH  = 1024; // Offscreen rendering size
-const HEIGHT = 768;  // Offscreen rendering size
-const BASE_LINE = HEIGHT * 0.667;
+import * as config from './config';
 
 export default class Ground {
 
@@ -11,15 +7,16 @@ export default class Ground {
 
 	
 	constructor(){
+		this.type = 'ground';
 		let segment = {
 			x: 0,
-			y: BASE_LINE,
+			y: config.BASE_LINE,
 			cp1x: 0,
-			cp1y: BASE_LINE,
-			cp2x: WIDTH * 0.6667,
-			cp2y: BASE_LINE,
-			endx: WIDTH,
-			endy: BASE_LINE
+			cp1y: config.BASE_LINE,
+			cp2x: config.WIDTH * 0.6667,
+			cp2y: config.BASE_LINE,
+			endx: config.WIDTH,
+			endy: config.BASE_LINE
 		};
 		this.segments.push(segment);
 		console.log(segment);
@@ -34,10 +31,10 @@ export default class Ground {
 			let y = last.endy;
 			let cp1x = x + (x - last.cp2x);
 			let cp1y = y + (y - last.cp2y);
-			let endx = x + WIDTH;
-			let endy = y + HEIGHT * normal_random();
+			let endx = x + config.WIDTH;
+			let endy = y + config.HEIGHT * normal_random();
 
-			let variance = (WIDTH / 5) + (WIDTH / 3) * normal_random();
+			let variance = (config.WIDTH / 5) + (config.WIDTH / 3) * normal_random();
 			let cp2x = endx - variance;
 			let cp2y = endy - variance * normal_random();
 
@@ -53,7 +50,6 @@ export default class Ground {
 			};
 			this.segments.push(segment);
 			last = segment;
-			console.log(segment);
 		}
 	}
 

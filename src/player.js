@@ -1,18 +1,17 @@
-import Entity from './entity';
+import Scenery from './entity';
 
-export default class Player extends Entity {
-	constructor(config){
-		let type = 'player';
-		super(type, config);
+export default class Player extends Scenery {
+	constructor(x, y, z, width, height, sprite, frameId){
+		super(x, y, z, width, height, sprite, frameId);
+		this.type = 'player';
 	}
 
-	update(dt, ddx, ddy){
-		this.ddx = dt * ddx;
-		this.ddy = dt * ddy;
+	update(dt){
+		let ddx = dt * Math.log(this.frameId) * 100; // The rate that player is moving forward
+		let ddy = config.GRAVITY;
 		this.dx += dt * this.ddx;
 		this.dy += dt * this.ddy;
 		this.x  += dt * this.dx;
 		this.y  += dt * this.dy;
-		console.log(this.dx, this.dy, this.x, this.y)
 	}
 }
