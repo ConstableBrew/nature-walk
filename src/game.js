@@ -5,10 +5,6 @@ import Ground from './ground';
 import Terrain from './terrain';
 import Sky from './sky';
 
-utils.init();
-
-// TODO: Move these to some config file
-
 
 class Game {
 	gameReady = false;
@@ -21,6 +17,7 @@ class Game {
 	offScreenCtx = null;
 
 	renderingLayers = [];
+	scenery = [];
 	player = {};
 	assets = {};
 
@@ -35,14 +32,14 @@ class Game {
 	dt = 0;
 
 	frame() {
-		let step = config.step;
+		let step = config.STEP;
 		this.t = window.performance.now();
 		this.dt += Math.min(1, (this.t - this.tprev) / 1000);
-		while(this.dt > step) {
-			this.frameId = (this.frameId + 1)|0;
-			this.dt -= step;
+		//while(this.dt > step) {
+		//	this.frameId = (this.frameId + 1)|0;
+		//	this.dt -= step;
 			this.update(step);
-		}
+		//}
 		this.tprev = this.t;
 		this.render();
 		
@@ -80,11 +77,24 @@ class Game {
 			this.frameId
 		);
 
-		this.renderingLayers.push(new Sky(this.assets['BG_SKY']));
-		this.renderingLayers.push(new Terrain(0, 0, 0, [this.assets['BG_MOUNTAIN']]));
-		this.renderingLayers.push(new Terrain(0, 0, 0, [this.assets['BG_HILL']]));
+		let sky = new Sky(this.assets['BG_SKY']);
+		let mountain = new Terrain(0, 0, 30 * 5280, [this.assets['BG_MOUNTAIN']]);
+		let hill1 = new Terrain(0, 0, 5 * 5280, [this.assets['BG_HILL']]);
+		let hill2 = new Terrain(0, 0, 1 * 5280, [this.assets['BG_HILL']]);
+		let ground = new Ground();
+
+		this.scenery.push(sky);
+		this.scenery.push(mountain);
+		this.scenery.push(hill1);
+		this.scenery.push(hill2);
+		this.scenery.push(ground);
+
+		this.renderingLayers.push(sky);
+		this.renderingLayers.push(mountain);
+		this.renderingLayers.push(hill1);
+		this.renderingLayers.push(hill2);
 		this.renderingLayers.push(this.player);
-		this.renderingLayers.push(new Ground());
+		this.renderingLayers.push(ground);
 	}
 
 	start() {
@@ -108,17 +118,8 @@ class Game {
 
 		this.player.update(dt);
 
-		SetPiece.stageDx = x - this.player.x;
-		SetPiece.stageDy = y - this.player.y;
 
-		this.player.x = x;
-		this.player.y = y;
-
-
-		this.renderingLayers.forEach((layer) => {
-			if (layer.type !== 'player')
-				layer.update(dt)
-		});
+		this.scenery.forEach((scenery) => scenery.update(dt));
 	}
 
 

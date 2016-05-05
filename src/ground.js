@@ -24,7 +24,6 @@ export default class Ground {
 	}
 
 	generate(){
-
 		let last = this.segments[this.segments.length-1];
 		while (this.segments.length < 3){
 			let x = last.endx;

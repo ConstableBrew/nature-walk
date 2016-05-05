@@ -66,11 +66,11 @@ export var easeInQuadTween;
 export var easeOutQuadTween;
 export var easeInOutQuadTween;
 
-export function init(){
+!function init(){
 	var exported = asm();
 	linearTween = exported.linearTween;
 	easeInQuadTween = exported.easeInQuadTween;
 	easeOutQuadTween = exported.easeOutQuadTween;
 	easeInOutQuadTween = exported.easeInOutQuadTween;
 	return exported;
-};
+}();

@@ -1,7 +1,7 @@
 import {normal_random} from './utils';
 import * as config from './config';
 import Scenery from './scenery';
-import SetPiece from './setpiece';
+import SetPiece, {stageDx, stageDy} from './setpiece';
 
 
 // TODO: Move these to some config file
@@ -25,13 +25,16 @@ export default class Terrain extends SetPiece{
 		if (!xoffset)
 			xoffset = this.scenery.reduce((x, s) => Math.max(x, s.x + s.w), 0);
 
-		while(xoffset < config.WIDTH + SetPiece.stateDx){
+		while(xoffset < config.WIDTH + stageDx){
 			let sprite = this.sprites[(Math.random() * this.sprites.length)|0];
 			let x = xoffset + sprite.w + sprite.w / 2 * normal_random();
 			let y = this.y;
 			let z = this.z;
+			let w = sprite.w;
+			let h = sprite.h;
+			let frameId = 0;
 
-			let scenery = new Scenery(x, y, z, width, height, sprite, frameId)
+			let scenery = new Scenery(x, y, z, w, h, sprite, frameId)
 			this.scenery.push(scenery);
 
 			xoffset = x + sprite.w;
