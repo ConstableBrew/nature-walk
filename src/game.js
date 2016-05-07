@@ -1,6 +1,8 @@
 import * as utils from './utils';
 import Player from './player';
+import Ground from './ground';
 import Terrain from './terrain';
+import Sky from './sky';
 
 utils.init();
 
@@ -10,6 +12,9 @@ const STEP = 1/FPS;
 const WIDTH  = 1024; // Offscreen rendering size
 const HEIGHT = 768;  // Offscreen rendering size
 const RATIO  = HEIGHT / WIDTH;
+const BASE_LINE = HEIGHT * 0.667;
+const BASE_MARGIN = WIDTH * 0.2;
+const GRAVITY = 987;
 
 class Game {
 	gameReady = false;
@@ -70,12 +75,14 @@ class Game {
 		this.onScreenCtx.imageSmoothingEnabled  = false;
 
 		this.assets = assets;
-		this.player = new Player({x: WIDTH/2, y:HEIGHT/2});
+		this.player = new Player({x: BASE_MARGIN, y:BASE_LINE});
 		this.player.setAnimation(this.frameId|0, this.assets['DRUID_RUN'])
 
-		this.layers.push(new Terrain(0.75, [this.assets['BG_MOUNTAIN']], 3));
-		this.layers.push(new Terrain(0.9, [this.assets['BG_HILL']], 5));
+		this.layers.push(new Sky(this.assets['BG_SKY']));
+		this.layers.push(new Terrain(0.5, [this.assets['BG_MOUNTAIN']], 3));
+		this.layers.push(new Terrain(0.75, [this.assets['BG_HILL']], 5));
 		this.layers.push(this.player);
+		this.layers.push(new Ground());
 	}
 
 	start() {
@@ -93,11 +100,26 @@ class Game {
 	// ========================================================================
 
 	update(dt) {
-		let dx = -Math.log(this.frameId) * 7; // The rate that things are scrolling left
-		let dy = 0;
 
-		console.log(dx, dy);
-		this.layers.forEach((layer) => layer.update(dt, dx, dy));
+		// Update the player first, then move the player back to the static position. Use the delta of the player to adjust the other layers
+		let x = this.player.x;
+		let y = this.player.y;
+		let ddx = Math.log(this.frameId) * 50; // The rate that player is moving forward
+		let ddy = GRAVITY;
+
+		this.player.update(dt, ddx, ddy);
+
+		let dx = x - this.player.x;
+		let dy = y - this.player.y;
+
+		this.player.x = x;
+		this.player.y = y;
+
+
+		this.layers.forEach((layer) => {
+			if (layer.type !== 'player')
+				layer.update(dx, dy)
+		});
 	}
 
 
