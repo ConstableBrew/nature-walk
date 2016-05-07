@@ -29,7 +29,7 @@ export default class Scenery extends SetPiece {
 	render(frameId, ctx){
 		let kf = this.getKeyFrame(frameId);
 		if (!kf || !kf.image) return;
-		ctx.drawImage(kf.image, kf.sx, kf.sy, kf.sw, kf.sh, this.x, this.y, this.w, this.h);
+		ctx.drawImage(kf.image, kf.sx, kf.sy, kf.sw, kf.sh, this.x, this.y-this.h, this.w, this.h);
 	}
 
 }

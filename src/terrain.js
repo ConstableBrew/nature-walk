@@ -14,8 +14,21 @@ export default class Terrain extends SetPiece{
 		this.scenery = [];
 		this.sprites = sprites || [];
 		this.type = 'terrain';
+		this.generate(-config.WIDTH);
+	}
 
-		this.generate();
+	createScenery(xoffset){
+		let sprite = this.sprites[(Math.random() * this.sprites.length)|0];
+		let x = xoffset + sprite.sw * 0.75 + sprite.sw / 2 * normal_random();
+		let y = this.y;
+		let z = this.z;
+		let w = sprite.sw;
+		let h = sprite.sh;
+		let frameId = 0;
+
+		let scenery = new Scenery(x, y, z, w, h, sprite, frameId)
+		this.scenery.push(scenery);
+		return x + sprite.sw; // Return the amount of offset		
 	}
 
 	generate(xoffset){
@@ -24,20 +37,8 @@ export default class Terrain extends SetPiece{
 
 		if (!xoffset)
 			xoffset = this.scenery.reduce((x, s) => Math.max(x, s.x + s.w), 0);
-
-		while(xoffset < config.WIDTH + stageDx){
-			let sprite = this.sprites[(Math.random() * this.sprites.length)|0];
-			let x = xoffset + sprite.w + sprite.w / 2 * normal_random();
-			let y = this.y;
-			let z = this.z;
-			let w = sprite.w;
-			let h = sprite.h;
-			let frameId = 0;
-
-			let scenery = new Scenery(x, y, z, w, h, sprite, frameId)
-			this.scenery.push(scenery);
-
-			xoffset = x + sprite.w;
+		while(xoffset < config.WIDTH * 2 + this.stageDx){
+			xoffset = this.createScenery(xoffset);
 		}
 	}
 
@@ -48,6 +49,7 @@ export default class Terrain extends SetPiece{
 			let x = scenery.x + scenery.w;
 			if (x < 0){
 				this.scenery.splice(i--,1);
+				console.log('collecting garbage');
 			}
 			xoffset = Math.max(xoffset, x);
 		}
@@ -59,7 +61,7 @@ export default class Terrain extends SetPiece{
 	}
 
 	update(dt){
-		super.update(dt);
+		//super.update(dt);
 		this.scenery.forEach((scenery) => scenery.update(dt))
 		this.garbageCollection();
 	}

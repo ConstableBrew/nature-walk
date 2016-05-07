@@ -11,8 +11,15 @@ export default class Sky extends Scenery {
 		super(0, 0, 0, WIDTH, HEIGHT, sprite, 0)
 		this.type = 'sky';
 	}
+
+	render(frameId, ctx){
+		let kf = this.getKeyFrame(frameId);
+		if (!kf || !kf.image) return;
+		ctx.drawImage(kf.image, kf.sx, kf.sy, kf.sw, kf.sh, this.x, this.y, this.w, this.h);
+	}
 	
 	update(){
 		// nop
 	}
+
 }

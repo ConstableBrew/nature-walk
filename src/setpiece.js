@@ -1,8 +1,6 @@
 // TODO: Move these to some config file, and camera stuff to a camera object
 import * as config from './config';
 
-console.log('SetPiece');
-
 export var stageDx = 0;
 export var stageDy = 0;
 
@@ -26,11 +24,14 @@ export default class SetPiece {
 
 	update(dt){
 		// Movement relative to the stage
-		let zFactor = this.z / config.FIELD_OF_VIEW;
-		let dx = this.stageDx * zFactor;
-		let dy = this.stageDy * zFactor;
-		this.x += dx * dt;
-		this.y += dy * dt;
+		// Calculate the field of view of the plane based on its distance from the camera
+		// And then we move it a fraction of the amount the player's plane moves
+		let zFieldOfView = (2 * Math.sin(config.CAMERA_ANGLE_DEG / 2 * (Math.PI / 180)) * this.z / Math.sin((180 - 90 - config.CAMERA_ANGLE_DEG / 2) * (Math.PI / 180)));
+		let zFactor = config.FIELD_OF_VIEW / zFieldOfView;
+		this.dx = this.stageDx * zFactor;
+		this.dy = this.stageDy * zFactor;
+		this.x += this.dx * dt;
+		this.y += this.dy * dt;
 	}
 
 	set stageDx (dx){

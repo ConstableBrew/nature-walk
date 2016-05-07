@@ -35,11 +35,11 @@ class Game {
 		let step = config.STEP;
 		this.t = window.performance.now();
 		this.dt += Math.min(1, (this.t - this.tprev) / 1000);
-		//while(this.dt > step) {
-		//	this.frameId = (this.frameId + 1)|0;
-		//	this.dt -= step;
+		while(this.dt > step) {
+			this.frameId = (this.frameId + 1)|0;
+			this.dt -= step;
 			this.update(step);
-		//}
+		}
 		this.tprev = this.t;
 		this.render();
 		
@@ -69,7 +69,7 @@ class Game {
 		this.assets = assets;
 		this.player = new Player(
 			config.BASE_MARGIN,
-			config.BASE_LINE,
+			config.HORIZON,
 			config.CAMERA_DISTANCE,
 			null,
 			null,
@@ -78,19 +78,25 @@ class Game {
 		);
 
 		let sky = new Sky(this.assets['BG_SKY']);
-		let mountain = new Terrain(0, 0, 30 * 5280, [this.assets['BG_MOUNTAIN']]);
-		let hill1 = new Terrain(0, 0, 5 * 5280, [this.assets['BG_HILL']]);
-		let hill2 = new Terrain(0, 0, 1 * 5280, [this.assets['BG_HILL']]);
+		let distantClouds = new Terrain(0, config.HORIZON / 2, 50 * 5280, [this.assets['BG_CLOUD_00'], this.assets['BG_CLOUD_01'], this.assets['BG_CLOUD_02'], this.assets['BG_CLOUD_03'], this.assets['BG_CLOUD_04'], this.assets['BG_CLOUD_05']]);
+		let mountain = new Terrain(0, config.HORIZON, 30 * 5280, [this.assets['BG_MOUNTAIN']]);
+		let clouds = new Terrain(0, config.HORIZON / 2, 20 * 5280, [this.assets['BG_CLOUD_00'], this.assets['BG_CLOUD_01'], this.assets['BG_CLOUD_02'], this.assets['BG_CLOUD_03'], this.assets['BG_CLOUD_04'], this.assets['BG_CLOUD_05']]);
+		let hill1 = new Terrain(0, config.HORIZON, 1 * 5280, [this.assets['BG_HILL']]);
+		let hill2 = new Terrain(0, config.HORIZON, config.CAMERA_DISTANCE, [this.assets['BG_HILL']]);
 		let ground = new Ground();
 
 		this.scenery.push(sky);
+		this.scenery.push(distantClouds);
 		this.scenery.push(mountain);
+		this.scenery.push(clouds);
 		this.scenery.push(hill1);
 		this.scenery.push(hill2);
 		this.scenery.push(ground);
 
 		this.renderingLayers.push(sky);
+		this.renderingLayers.push(distantClouds);
 		this.renderingLayers.push(mountain);
+		this.renderingLayers.push(clouds);
 		this.renderingLayers.push(hill1);
 		this.renderingLayers.push(hill2);
 		this.renderingLayers.push(this.player);
@@ -112,13 +118,12 @@ class Game {
 	// ========================================================================
 
 	update(dt) {
-		// Update the player first, then move the player back to the static position. Use the delta of the player to adjust the other layers
+		// The player's position doesn't move, instead the player changes the stageDx & stageDy,
+		// which then is used to update all the scenery
 		let x = this.player.x;
 		let y = this.player.y;
 
 		this.player.update(dt);
-
-
 		this.scenery.forEach((scenery) => scenery.update(dt));
 	}
 
