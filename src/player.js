@@ -19,8 +19,8 @@ export default class Player extends Scenery {
 		} else {
 			// Ramping up speed
 			t = this.elapsedTime;// t: current time
-			b = 0;// b: start value
-			c = config.RUN_MAX_SPEED;// c: change in value
+			b = -config.RUN_START_SPEED;// b: start value
+			c = -config.RUN_MAX_SPEED * config.METER;// c: change in value
 			d = config.RUN_TIME_TO_MAX_SPEED;// d: duraiton
 			dx = easeOutQuadTween(t, b, c, d); // The rate that player is moving forward
 			this.stageDx = dx;

@@ -34,9 +34,10 @@ export default class Scenery extends SetPiece {
 
 		// add linear gradient for atmospheric fading
 		ctx.rect(0, 0, config.WIDTH, config.HEIGHT);
+		let density = Math.atan(Math.log(Math.log(this.z)))/Math.PI;
 		let grd = ctx.createLinearGradient(0, 0, 0, config.HEIGHT);
-		grd.addColorStop(0.5, 'rgba(171, 206, 227, 0.01)'); // Light blueish
-		grd.addColorStop(1, 'rgba(117, 146, 163, 0.20)'); // Light blueish-gray
+		grd.addColorStop(0.5, 'rgba(171, 206, 227, ' + (density * 0.01) + ')'); // Light blueish
+		grd.addColorStop(1, 'rgba(117, 146, 163, ' + (density * 0.50) + ')'); // Light blueish-gray
 		ctx.fillStyle = grd;
 		ctx.fill();
 	}
