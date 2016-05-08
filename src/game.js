@@ -78,11 +78,11 @@ class Game {
 		);
 
 		let sky = new Sky(this.assets['BG_SKY']);
-		let distantClouds = new Terrain(0, config.HORIZON / 2, 50 * 5280, [this.assets['BG_CLOUD_00'], this.assets['BG_CLOUD_01'], this.assets['BG_CLOUD_02'], this.assets['BG_CLOUD_03'], this.assets['BG_CLOUD_04'], this.assets['BG_CLOUD_05']]);
-		let mountain = new Terrain(0, config.HORIZON, 30 * 5280, [this.assets['BG_MOUNTAIN']]);
-		let clouds = new Terrain(0, config.HORIZON / 2, 20 * 5280, [this.assets['BG_CLOUD_00'], this.assets['BG_CLOUD_01'], this.assets['BG_CLOUD_02'], this.assets['BG_CLOUD_03'], this.assets['BG_CLOUD_04'], this.assets['BG_CLOUD_05']]);
-		let hill1 = new Terrain(0, config.HORIZON, 1 * 5280, [this.assets['BG_HILL']]);
-		let hill2 = new Terrain(0, config.HORIZON, config.CAMERA_DISTANCE, [this.assets['BG_HILL']]);
+		let distantClouds = new Terrain(0, config.HORIZON / 2, 50 * 1000, [this.assets['BG_CLOUD_00'], this.assets['BG_CLOUD_01'], this.assets['BG_CLOUD_02'], this.assets['BG_CLOUD_03'], this.assets['BG_CLOUD_04'], this.assets['BG_CLOUD_05']]);
+		let mountain = new Terrain(0, config.HORIZON, 30 * 1000, [this.assets['BG_MOUNTAIN']]);
+		let clouds = new Terrain(0, config.HORIZON / 2, 20 * 1000, [this.assets['BG_CLOUD_00'], this.assets['BG_CLOUD_01'], this.assets['BG_CLOUD_02'], this.assets['BG_CLOUD_03'], this.assets['BG_CLOUD_04'], this.assets['BG_CLOUD_05']]);
+		let hill1 = new Terrain(0, config.HORIZON, 1 * 1000, [this.assets['BG_HILL']]);
+		let hill2 = new Terrain(0, config.HORIZON, 100, [this.assets['BG_HILL']]);
 		let ground = new Ground();
 
 		this.scenery.push(sky);

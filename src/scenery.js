@@ -1,5 +1,6 @@
 import Sprite from './sprite';
 import SetPiece from './setpiece';
+import * as config from './config';
 
 export default class Scenery extends SetPiece {
 
@@ -30,6 +31,14 @@ export default class Scenery extends SetPiece {
 		let kf = this.getKeyFrame(frameId);
 		if (!kf || !kf.image) return;
 		ctx.drawImage(kf.image, kf.sx, kf.sy, kf.sw, kf.sh, this.x, this.y-this.h, this.w, this.h);
+
+		// add linear gradient for atmospheric fading
+		ctx.rect(0, 0, config.WIDTH, config.HEIGHT);
+		let grd = ctx.createLinearGradient(0, 0, 0, config.HEIGHT);
+		grd.addColorStop(0.5, 'rgba(171, 206, 227, 0.01)'); // Light blueish
+		grd.addColorStop(1, 'rgba(117, 146, 163, 0.20)'); // Light blueish-gray
+		ctx.fillStyle = grd;
+		ctx.fill();
 	}
 
 }

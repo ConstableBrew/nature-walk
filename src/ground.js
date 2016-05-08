@@ -73,7 +73,22 @@ export default class Ground extends SetPiece {
 			ctx.bezierCurveTo(s.cp1x, s.cp1y, s.cp2x, s.cp2y, s.endx, s.endy);
 			s = this.segments[++i];
 		}
+		ctx.closePath();
+		ctx.strokeStyle = '#e2252c';
+		ctx.fillStyle = '#2c6ba1';
 		ctx.stroke();
+		ctx.fill();
+
+
+// context.beginPath();
+// context.moveTo(284 + xoff, 119 + yoff);
+// context.bezierCurveTo(46 + xoff, 189 + yoff, 39 + xoff, 60 + yoff, 243 + xoff, 29 + yoff);
+// context.bezierCurveTo(46 + xoff, 189 + yoff, 39 + xoff, 60 + yoff, 284 + xoff, 119 + yoff);
+// context.closePath();
+// context.strokeStyle = "#e2252c"; // line color
+// context.fillStyle = "#2C6BA1";
+// context.stroke();
+// context.fill();
 	}
 
 	update(dt){
