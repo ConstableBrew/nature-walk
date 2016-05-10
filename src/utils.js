@@ -121,7 +121,6 @@ function asm(stdlib, foreign, buffer){
 		}
 	}
 
-	}
 	/* based on http://mysite.verizon.net/res148h4j/javascript/script_exact_cubic.html#the%20source%20code */
 	function cubicRoots(P){
 	}
