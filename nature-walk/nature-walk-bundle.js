@@ -1,1 +1,1 @@
-console.error("SyntaxError: /Users/mikeb/github/nature-walk/src/utils.js: Unexpected token (3:0) while parsing file: /Users/mikeb/github/nature-walk/src/utils.js");
+console.error("SyntaxError: /Users/mikeb/github/nature-walk/src/utils.js: 'return' outside of function (267:1) while parsing file: /Users/mikeb/github/nature-walk/src/utils.js");

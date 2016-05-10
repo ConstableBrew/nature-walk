@@ -1,17 +1,15 @@
-import Entity from './entity';
-import Sprite from './sprite';
+import Scenery from './scenery';
 
 
 // TODO: Move these to some config file
 const WIDTH  = 1024; // Offscreen rendering size
 const HEIGHT = 768;  // Offscreen rendering size
 
-export default class Sky extends Entity {
+export default class Sky extends Scenery {
 
 	constructor(sprite){
-		super('sky', {sprite: sprite})
-		this.w = WIDTH;
-		this.h = HEIGHT;
+		super(0, 0, 0, WIDTH, HEIGHT, sprite, 0)
+		this.type = 'sky';
 	}
 
 	render(frameId, ctx){
@@ -23,4 +21,5 @@ export default class Sky extends Entity {
 	update(){
 		// nop
 	}
+
 }

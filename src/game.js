@@ -1,20 +1,10 @@
 import * as utils from './utils';
+import * as config from './config';
 import Player from './player';
 import Ground from './ground';
 import Terrain from './terrain';
 import Sky from './sky';
 
-utils.init();
-
-// TODO: Move these to some config file
-const FPS  = 24;
-const STEP = 1/FPS;
-const WIDTH  = 1024; // Offscreen rendering size
-const HEIGHT = 768;  // Offscreen rendering size
-const RATIO  = HEIGHT / WIDTH;
-const BASE_LINE = HEIGHT * 0.667;
-const BASE_MARGIN = WIDTH * 0.2;
-const GRAVITY = 987;
 
 class Game {
 	gameReady = false;
@@ -26,7 +16,8 @@ class Game {
 	onScreenCtx  = null;
 	offScreenCtx = null;
 
-	layers = [];
+	renderingLayers = [];
+	scenery = [];
 	player = {};
 	assets = {};
 
@@ -35,18 +26,19 @@ class Game {
 	// Main Game Loop
 	// ========================================================================
 	
-	frameId = 0|0;
+	frameId = 0;
 	tprev = window.performance.now();
 	t = this.tprev;
 	dt = 0;
 
 	frame() {
+		let step = config.STEP;
 		this.t = window.performance.now();
 		this.dt += Math.min(1, (this.t - this.tprev) / 1000);
-		while(this.dt > STEP) {
+		while(this.dt > step) {
 			this.frameId = (this.frameId + 1)|0;
-			this.dt -= STEP;
-			this.update(STEP);
+			this.dt -= step;
+			this.update(step);
 		}
 		this.tprev = this.t;
 		this.render();
@@ -64,25 +56,51 @@ class Game {
 		this.onScreen  = canvas;
 		this.offScreen = document.createElement('canvas');
 
-		this.offScreen.width  = WIDTH;
-		this.offScreen.height = HEIGHT;
+		this.offScreen.width  = config.WIDTH;
+		this.offScreen.height = config.HEIGHT;
 		this.offScreenCtx     = this.offScreen.getContext('2d');
 		this.offScreenCtx.imageSmoothingEnabled = false;
 
 		this.onScreen.width  = window.innerWidth;
-		this.onScreen.height = Math.min(window.innerHeight, RATIO * window.innerWidth);
+		this.onScreen.height = Math.min(window.innerHeight, config.RATIO * window.innerWidth);
 		this.onScreenCtx     = this.onScreen.getContext('2d');
 		this.onScreenCtx.imageSmoothingEnabled  = false;
 
 		this.assets = assets;
-		this.player = new Player({x: BASE_MARGIN, y:BASE_LINE});
-		this.player.setAnimation(this.frameId|0, this.assets['DRUID_RUN'])
+		this.player = new Player(
+			config.PLAYER_LEFT,
+			config.PLAYER_TOP,
+			config.CAMERA_DISTANCE,
+			null,
+			null,
+			this.assets['DRUID_RUN'],
+			this.frameId
+		);
 
-		this.layers.push(new Sky(this.assets['BG_SKY']));
-		this.layers.push(new Terrain(0.5, [this.assets['BG_MOUNTAIN']], 3));
-		this.layers.push(new Terrain(0.75, [this.assets['BG_HILL']], 5));
-		this.layers.push(this.player);
-		this.layers.push(new Ground());
+		let sky = new Sky(this.assets['BG_SKY']);
+		let distantClouds = new Terrain(0, config.HORIZON / 2, 50 * 1000, [this.assets['BG_CLOUD_00'], this.assets['BG_CLOUD_01'], this.assets['BG_CLOUD_02'], this.assets['BG_CLOUD_03'], this.assets['BG_CLOUD_04'], this.assets['BG_CLOUD_05']]);
+		let mountain = new Terrain(0, config.HORIZON, 30 * 1000, [this.assets['BG_MOUNTAIN']]);
+		let clouds = new Terrain(0, config.HORIZON / 2, 10 * 1000, [this.assets['BG_CLOUD_00'], this.assets['BG_CLOUD_01'], this.assets['BG_CLOUD_02'], this.assets['BG_CLOUD_03'], this.assets['BG_CLOUD_04'], this.assets['BG_CLOUD_05']]);
+		let hill1 = new Terrain(0, config.HORIZON, 3 * 1000, [this.assets['BG_HILL']]);
+		let hill2 = new Terrain(0, config.HORIZON, 0.5*1000, [this.assets['BG_HILL']]);
+		let ground = new Ground(0, config.PLAYER_TOP, config.CAMERA_DISTANCE);
+
+		this.scenery.push(sky);
+		this.scenery.push(distantClouds);
+		this.scenery.push(mountain);
+		this.scenery.push(clouds);
+		this.scenery.push(hill1);
+		this.scenery.push(hill2);
+		this.scenery.push(ground);
+
+		this.renderingLayers.push(sky);
+		this.renderingLayers.push(distantClouds);
+		this.renderingLayers.push(mountain);
+		this.renderingLayers.push(clouds);
+		this.renderingLayers.push(hill1);
+		this.renderingLayers.push(hill2);
+		this.renderingLayers.push(this.player);
+		this.renderingLayers.push(ground);
 	}
 
 	start() {
@@ -100,26 +118,13 @@ class Game {
 	// ========================================================================
 
 	update(dt) {
-
-		// Update the player first, then move the player back to the static position. Use the delta of the player to adjust the other layers
+		// The player's position doesn't move, instead the player changes the stageDx & stageDy,
+		// which then is used to update all the scenery
 		let x = this.player.x;
 		let y = this.player.y;
-		let ddx = Math.log(this.frameId) * 50; // The rate that player is moving forward
-		let ddy = GRAVITY;
 
-		this.player.update(dt, ddx, ddy);
-
-		let dx = x - this.player.x;
-		let dy = y - this.player.y;
-
-		this.player.x = x;
-		this.player.y = y;
-
-
-		this.layers.forEach((layer) => {
-			if (layer.type !== 'player')
-				layer.update(dx, dy)
-		});
+		this.player.update(dt);
+		this.scenery.forEach((scenery) => scenery.update(dt));
 	}
 
 
@@ -135,8 +140,10 @@ class Game {
 			this.onScreen.height/cvs.height,
 			this.onScreen.width/cvs.width
 		);
-		let w = cvs.width * scale;
-		let h = cvs.height * scale;
+		// Match the width of the screen and then
+		// Center the scaled image vertically on the screen
+		let w = cvs.width;
+		let h = cvs.height;
 		let x = 0;
 		let y = (this.offScreen.height - h) / 2;
 
@@ -165,7 +172,7 @@ class Game {
 	}
 
 	renderLayers(){
-		this.layers.forEach((layer) => layer.render(this.frameId, this.offScreenCtx));
+		this.renderingLayers.forEach((layer) => layer.render(this.frameId, this.offScreenCtx));
 	}
 
 

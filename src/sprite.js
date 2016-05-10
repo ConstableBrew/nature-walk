@@ -1,4 +1,6 @@
 export default class Sprite {
+	// Sprites define a series of keyframe animations
+	
 	keyFrames = [];
 
 	constructor (image, sx, sy, sw, sh, numKeyFrames) {

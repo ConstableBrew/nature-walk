@@ -1,8 +1,5 @@
-function asm(){
+function asm(stdlib, foreign, buffer){
 	'use asm';
-<<<<<<< Updated upstream
-=======
-
 
 	var exp = stdlib.Math.exp;
 	var log = stdlib.Math.log;
@@ -29,7 +26,6 @@ function asm(){
 	heap32[(heap_$base + _size) >> 2] = heap.length - heap_BLOCK_SIZE;
 
 	// Tween function parameters
->>>>>>> Stashed changes
 	// t: current time
 	// b: start value
 	// c: change in value
@@ -267,6 +263,7 @@ function asm(){
 
 
 
+
 	return {
 		linearTween: linearTween,
 		easeInQuadTween: easeInQuadTween,
@@ -295,4 +292,4 @@ export var easeInOutQuadTween;
 	easeOutQuadTween = exported.easeOutQuadTween;
 	easeInOutQuadTween = exported.easeInOutQuadTween;
 	return exported;
-};
+}();
