@@ -1,7 +1,7 @@
 import Sprite from './sprite';
 
 var druidRun = new Image();
-druidRun.src = '/assets/run-cycle-test.png';
+druidRun.src = '/assets/run-cycle-03.png';
 
 var bg_mountain = new Image();
 bg_mountain.src = '/assets/bg-mountain.png';
