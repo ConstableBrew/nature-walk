@@ -1,18 +1,32 @@
-import Entity from './entity';
+import * as config from './config';
+import {easeOutQuadTween} from './utils';
+import Scenery from './scenery';
 
-export default class Player extends Entity {
-	constructor(config){
-		let type = 'player';
-		super(type, config);
+
+export default class Player extends Scenery {
+	constructor(x, y, z, width, height, sprite, frameId){
+		super(x, y, z, width, height, sprite, frameId);
+		this.type = 'player';
+		this.elapsedTime = 0;
 	}
 
-	update(dt, ddx, ddy){
-		this.ddx = dt * ddx;
-		this.ddy = dt * ddy;
-		this.dx += dt * this.ddx;
-		this.dy += dt * this.ddy;
-		this.x  += dt * this.dx;
-		this.y  += dt * this.dy;
-		console.log(this.dx, this.dy, this.x, this.y)
+	update(dt){
+		this.elapsedTime += dt;
+		let t, b, c, d, dx, ddy;
+		
+		if (this.elapsedTime >= config.RUN_TIME_TO_MAX_SPEED) {
+			// No change to stageDx
+		} else {
+			// Ramping up speed
+			t = this.elapsedTime;// t: current time
+			b = -config.RUN_START_SPEED;// b: start value
+			c = -config.RUN_MAX_SPEED * config.METER;// c: change in value
+			d = config.RUN_TIME_TO_MAX_SPEED;// d: duraiton
+			dx = easeOutQuadTween(t, b, c, d); // The rate that player is moving forward
+			this.stageDx = dx;
+		}
+		
+		ddy = config.GRAVITY;
+		this.stageDy += dt * ddy;
 	}
 }

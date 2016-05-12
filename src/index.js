@@ -12,5 +12,5 @@ let game = new Game(document.getElementById('canvas'), assets);
 }()
 .then(game.start);
 
-game.debug = true;
+//game.debug = true;
 game.start();
